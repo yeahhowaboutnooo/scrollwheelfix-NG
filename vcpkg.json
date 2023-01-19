@@ -1,10 +1,13 @@
 {
-    "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg/master/scripts/vcpkg.schema.json",
-    "name": "hello-world",
-    "version-string": "0.0.1",
-    "dependencies": [
-        "commonlibsse-ng",
-        { "name": "skyrimscripting-cmake", "version>=": "0.0.1" },
-        { "name": "skyrimscripting-plugin", "version>=": "0.1.0#1" }
-    ]
+  "name": "scrollwheelfix-ng",
+  "version-string": "1.0.0",
+  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
+  "homepage": "https://github.com/yeahhowaboutnooo/scrollwheelfix-NG",
+  "license": "MIT",
+  "dependencies": [
+    "xbyak",
+    "commonlibsse-ng",
+    { "name": "skyrimscripting-cmake", "version>=": "0.0.1" },
+    { "name": "skyrimscripting-plugin", "version>=": "0.1.0#1" }
+  ]
 }
