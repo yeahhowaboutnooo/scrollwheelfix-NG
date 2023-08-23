@@ -80,8 +80,26 @@ namespace Hooks
 		
 	}
 
+	void AllowPOVchangeDuringAnimObjectAnims()
+	{
+		auto PlayerControls__IsCamSwitchControlsEnabled_1407051A0 = REL::RelocationID(41263, 42342).address();
+		if (!PlayerControls__IsCamSwitchControlsEnabled_1407051A0) {
+			fail();
+			return;
+		}
+		uintptr_t offset = 0x13;
+
+		injectionPoint = PlayerControls__IsCamSwitchControlsEnabled_1407051A0 + offset;
+
+		//replace "and AL, 1" with "or AL, 1"
+		REL::safe_fill(injectionPoint, 0x0c, 1);
+
+		logger::info("allowing POV change during Animations with AnimObjects!");
+	}
+
 	void Install()
 	{
 		ScrollWheelFix();
+		AllowPOVchangeDuringAnimObjectAnims();
 	}
 }
