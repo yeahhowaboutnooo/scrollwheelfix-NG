@@ -97,9 +97,50 @@ namespace Hooks
 		logger::info("allowing POV change during Animations with AnimObjects!");
 	}
 
+	uint64_t PlayerCharacter__SwitchSkeleton_1406A1820;
+	void fixAnimObjectsNotBeingParsed()
+	{
+		PlayerCharacter__SwitchSkeleton_1406A1820 = REL::RelocationID(39401, 40476).address();
+		if (!PlayerCharacter__SwitchSkeleton_1406A1820)
+		{
+			fail();
+			return;
+		}
+		uintptr_t offset = 0x7;
+
+		struct SetRDXtoZero : Xbyak::CodeGenerator
+		{
+			SetRDXtoZero()
+			{
+				and_(dl,0);
+				movzx(ebp,dl);
+				mov(rsi,rcx);
+				jmp(ptr[rip]);
+				//todo optimize me:
+				//push retAddress (switchskeleton+0xd)
+				//call isTaskPoolRequired
+				dq(PlayerCharacter__SwitchSkeleton_1406A1820 + 0xd);
+			}
+		};
+		SetRDXtoZero d2z;
+		d2z.ready();
+
+		static SKSE::Trampoline injectedCode;
+		auto injectedCodeSize = d2z.getSize() + 32; //write_branch5 allocates too much mem
+		injectedCode.create(injectedCodeSize);
+
+		injectedCode.write_branch<5>(PlayerCharacter__SwitchSkeleton_1406A1820 + offset,
+		                           injectedCode.allocate(d2z));
+
+		logger::info("injected Code @ {0:x}", PlayerCharacter__SwitchSkeleton_1406A1820 + offset);
+		logger::info("fixed objects (dis)appearing during first person object animations!");
+
+	}
+
 	void Install()
 	{
 		ScrollWheelFix();
 		AllowPOVchangeDuringAnimObjectAnims();
+		fixAnimObjectsNotBeingParsed();
 	}
 }
